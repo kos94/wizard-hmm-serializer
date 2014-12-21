@@ -37,32 +37,22 @@ public class Recognizer {
     }
 
     public static Shape recognize(ArrayList<Vector3d> records) {
+    	long startStamp = System.currentTimeMillis();
         quantizer.refresh();
-        Date startTime = new Date();
-        // Load recognition data
-        TimeSeriesClassificationData testData = new TimeSeriesClassificationData();
-        testData.loadDatasetFromRecords(records);
 
-        TimeSeriesClassificationData quantizedTestData = new TimeSeriesClassificationData(1);
-        int classLabel = testData.getData().getClassLabel();
-        MatrixDouble quantizedSample = new MatrixDouble();
-
-        for (int j = 0; j < testData.getData().getLength(); j++) {
-            quantizer.quantize(testData.getData().getData().getRowVector(j));
-            quantizedSample.push_back(quantizer.getFeatureVector());
+        int[] timeSeries = new int[ records.size() ];
+        double[] rec = new double[3];
+        
+        for (int j = 0; j < timeSeries.length ; j++) {
+        	rec[0] = records.get(j).x;
+        	rec[1] = records.get(j).y;
+        	rec[2] = records.get(j).z;
+            timeSeries[j] = quantizer.quantize(rec);
         }
+        
+        hmm.predict(timeSeries);
 
-        if (!quantizedTestData.addSample(classLabel, quantizedSample)) {
-            System.out.println("ERROR: Failed to quantize training data!");
-            return Shape.FAIL;
-        }
-
-        hmm.predict(quantizedTestData.getData().getData());
-	//printLabel(hmm.getPredictedClassLabel());
-
-        long diff = new Date().getTime() - startTime.getTime();
-        Recognizer.sum += diff;
-        System.out.println("Time: " + diff + " ms");
+        System.out.println("Time: " + (System.currentTimeMillis()-startStamp) + " ms");
         return getShape(hmm.getPredictedClassLabel());
     }
 
@@ -140,10 +130,11 @@ public class Recognizer {
     public static HMM getHMMFromFile(String path) {
         Loader loader = new Loader();
         try {
-            loader.loadHMMFromFile("HMMModel.txt");
+            loader.loadHMMFromFile(path);
             return loader.hmm;
         } catch (Exception ex) {
-            System.err.println("ERROR: Failed to write hmm! " + ex);
+            System.err.println("ERROR: Failed to write hmm! ");
+            ex.printStackTrace();
             return null;
         }
     }
@@ -208,14 +199,21 @@ public class Recognizer {
     }
 
     public static void main(String[] args) {
-        KMeansQuantizer q = (KMeansQuantizer) 
-                Recognizer.readObject(new File("hmm_quantizer.ser"));
-        KMeansQuantizer q3 = (KMeansQuantizer) 
-                Recognizer.readObject(new File("HMMQuantizer.ser"));
-        HMM hmm = (HMM) 
-                Recognizer.readObject(new File("hmm_model.ser"));
-         HMM hmm3 = (HMM) 
+//        KMeansQuantizer q = (KMeansQuantizer) 
+//                Recognizer.readObject(new File("hmm_quantizer.ser"));
+//        KMeansQuantizer q3 = (KMeansQuantizer) 
+//                Recognizer.readObject(new File("HMMQuantizer.ser"));
+//        HMM hmm = (HMM) 
+//                Recognizer.readObject(new File("hmm_model.ser"));
+        HMM hmm3 = (HMM) 
                 Recognizer.readObject(new File("HMMModel.ser"));
         hmm3.printTXT();
+//        q3.print();
+//        HMM hmm = Recognizer.getHMMFromFile("wf_hmm_model_new.txt");
+//        hmm.printTXT();
+//        
+//        KMeansQuantizer q1 = Recognizer.getQuantizerFromFile("wf_hmm_quantizer_new.txt");
+//        q1.print();
+        Recognizer.writeSerialized("wf_hmm_quantizer_new.txt", "wf_hmm_model_new.txt");
     }
 }

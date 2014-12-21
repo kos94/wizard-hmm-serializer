@@ -1,17 +1,15 @@
 package com.wizardfight.recognition;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.Serializable;
 import java.util.ArrayList;
 
 public class MatrixDouble implements Serializable {
 
     private static final long serialVersionUID = 5L;
-    protected int rows; // /< The number of rows in the Matrix
-    protected int cols; // /< The number of columns in the Matrix
-    protected int capacity; // /< The actual capacity of the Matrix, this will
-    protected double[][] dataPtr; // /< A pointer to the data
+    int rows; // /< The number of rows in the Matrix
+    int cols; // /< The number of columns in the Matrix
+    private int capacity; // /< The actual capacity of the Matrix, this will
+    double[][] dataPtr; // /< A pointer to the data
 
     public MatrixDouble() {
         rows = 0;
@@ -40,25 +38,6 @@ public class MatrixDouble implements Serializable {
         return rowVector;
     }
 
-    /**
-     * Gets the ranges (min and max values) of each column in the matrix.
-     *
-     * @return a vector with the ranges (min and max values) of each column in
-     * the matrix
-     */
-    public ArrayList<MinMax> getRanges() {
-        if (rows == 0) {
-            return new ArrayList<MinMax>();
-        }
-        ArrayList<MinMax> ranges = new ArrayList<MinMax>(cols);
-        for (int i = 0; i < rows; i++) {
-            for (int j = 0; j < cols; j++) {
-                ranges.add(new MinMax());
-                ranges.get(j).updateMinMax(dataPtr[i][j]);
-            }
-        }
-        return ranges;
-    }
 
     public void clear() {
         rows = 0;
@@ -81,7 +60,7 @@ public class MatrixDouble implements Serializable {
         // If there is no data, but we know how many cols are in a sample then
         // we simply create a new buffer of size 1 and add the sample
         if (dataPtr == null) {
-            cols = (int) sample.size();
+            cols = sample.size();
             if (!resize(1, cols)) {
                 clear();
                 return false;
@@ -112,9 +91,7 @@ public class MatrixDouble implements Serializable {
 
             // Copy the original data
             for (int i = 0; i < rows; i++) {
-                for (int j = 0; j < cols; j++) {
-                    tempDataPtr[i][j] = dataPtr[i][j];
-                }
+                System.arraycopy(dataPtr[i], 0, tempDataPtr[i], 0, cols);
             }
 
             // Add the new sample at the end
