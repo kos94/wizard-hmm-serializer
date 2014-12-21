@@ -145,4 +145,36 @@ public class HMM implements Serializable {
         }
         System.out.println("\n==========================");
     }
+    
+    public void printTXT() {
+        System.out.println("HMM_MODEL_FILE_V2.0\n"
+                + "Trained: 1\n"
+                + "UseScaling: 0\n"
+                + "NumInputDimensions: 1\n"
+                + "NumOutputDimensions: 0\n"
+                + "NumTrainingIterationsToConverge: 0\n"
+                + "MinNumEpochs: 0\n"
+                + "MaxNumEpochs: 100\n"
+                + "ValidationSetSize: 20\n"
+                + "LearningRate: 0.1\n"
+                + "MinChange: 1e-005\n"
+                + "UseValidationSet: 0\n"
+                + "RandomiseTrainingOrder: 1\n"
+                + "UseNullRejection: 0\n"
+                + "ClassifierMode: 1\n"
+                + "NullRejectionCoeff: 5\n"
+                + "NumClasses: 7\n"
+                + "NullRejectionThresholds:  0 0 0 0 0 0 0\n"
+                + "ClassLabels:  1 2 3 4 5 6 7\n"
+                + "NumStates: 4\n"
+                + "NumSymbols: 20\n"
+                + "ModelType: 1\n"
+                + "Delta: 1\n"
+                + "NumRandomTrainingIterations: 20");
+        for (int k = 0; k < numClasses; k++) {
+            System.out.println("Model_ID: " + (k+1));
+            models.get(k).printTXT();
+        }
+        System.out.println("\n==========================");
+    }
 }

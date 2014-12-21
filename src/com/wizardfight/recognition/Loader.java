@@ -54,7 +54,7 @@ public class Loader {
             return false;
         }
 
-        String[] buf = word.split(" ");
+        String[] buf = word.split("\\s+");
         hmm.trained = (Integer.parseInt(buf[1]) == 1);
 
         // Load the scaling state
@@ -65,7 +65,7 @@ public class Loader {
             reader.close();
             return false;
         }
-        buf = word.split(" ");
+        buf = word.split("\\s+");
         hmm.useScaling = (Integer.parseInt(buf[1]) == 1);
 
         // Load the NumInputDimensions
@@ -76,7 +76,7 @@ public class Loader {
             reader.close();
             return false;
         }
-        buf = word.split(" ");
+        buf = word.split("\\s+");
         hmm.numInputDimensions = Integer.parseInt(buf[1]);
 
         // Load the NumOutputDimensions
@@ -187,7 +187,7 @@ public class Loader {
             hmm.clear();
             return false;
         }
-        buf = word.split(" ");
+        buf = word.split("\\s+");
         hmm.useNullRejection = (Integer.parseInt(buf[1]) == 1);
 
         // Load if the classifier mode
@@ -221,7 +221,7 @@ public class Loader {
                 reader.close();
                 return false;
             }
-            buf = word.split(" ");
+            buf = word.split("\\s+");
             hmm.numClasses = Integer.parseInt(buf[1]);
 
             // Load the null rejection thresholds
@@ -234,7 +234,7 @@ public class Loader {
                 return false;
             }
             hmm.nullRejectionThresholds = new double[hmm.numClasses];
-            buf = word.split(" ");
+            buf = word.split("\\s+");
 //            System.out.println(word);
             for (int i = 0; i < hmm.nullRejectionThresholds.length; i++) {
 
@@ -250,7 +250,7 @@ public class Loader {
                 return false;
             }
             hmm.classLabels = new int[hmm.numClasses];
-            buf = word.split(" ");
+            buf = word.split("\\s+");
             for (int i = 0; i < hmm.classLabels.length; i++) {
                 hmm.classLabels[i] = Integer.parseInt(buf[i + 1]);
             }
@@ -282,7 +282,7 @@ public class Loader {
             reader.close();
             return false;
         }
-        buf = word.split(" ");
+        buf = word.split("\\s+");
         hmm.numStates = Integer.parseInt(buf[1]);
 
         word = reader.readLine();
@@ -292,7 +292,7 @@ public class Loader {
             reader.close();
             return false;
         }
-        buf = word.split(" ");
+        buf = word.split("\\s+");
         hmm.numSymbols = Integer.parseInt(buf[1]);
 
         word = reader.readLine();
@@ -302,7 +302,7 @@ public class Loader {
             reader.close();
             return false;
         }
-        buf = word.split(" ");
+        buf = word.split("\\s+");
         hmm.modelType = Integer.parseInt(buf[1]) == 0 ? HMMModelTypes.ERGODIC
                 : HMMModelTypes.LEFTRIGHT;
 
@@ -313,7 +313,7 @@ public class Loader {
             reader.close();
             return false;
         }
-        buf = word.split(" ");
+        buf = word.split("\\s+");
         hmm.delta = Integer.parseInt(buf[1]);
 
         word = reader.readLine();
@@ -323,7 +323,7 @@ public class Loader {
             reader.close();
             return false;
         }
-        buf = word.split(" ");
+        buf = word.split("\\s+");
         hmm.numRandomTrainingIterations = Integer.parseInt(buf[1]);
 
         // If the HMM has been trained then load the hmm.models
@@ -343,7 +343,7 @@ public class Loader {
                     reader.close();
                     return false;
                 }
-                buf = word.split(" ");
+                buf = word.split("\\s+");
                 modelID = Integer.parseInt(buf[1]);
 
                 if (modelID - 1 != k) {
@@ -361,7 +361,7 @@ public class Loader {
                     reader.close();
                     return false;
                 }
-                buf = word.split(" ");
+                buf = word.split("\\s+");
                 hmm.models.add(k, new HiddenMarkovModel());
                 hmm.models.get(k).numStates = Integer.parseInt(buf[1]);
 
@@ -375,7 +375,7 @@ public class Loader {
                     reader.close();
                     return false;
                 }
-                buf = word.split(" ");
+                buf = word.split("\\s+");
                 hmm.models.get(k).numSymbols = Integer.parseInt(buf[1]);
 
                 word = reader.readLine();
@@ -386,7 +386,7 @@ public class Loader {
                     reader.close();
                     return false;
                 }
-                buf = word.split(" ");
+                buf = word.split("\\s+");
                 hmm.models.get(k).modelType = Integer.parseInt(buf[1]) == 0 ? HMMModelTypes.ERGODIC
                         : HMMModelTypes.LEFTRIGHT;
 
@@ -398,7 +398,7 @@ public class Loader {
                     reader.close();
                     return false;
                 }
-                buf = word.split(" ");
+                buf = word.split("\\s+");
                 hmm.models.get(k).delta = Integer.parseInt(buf[1]);
 
                 word = reader.readLine();
@@ -409,8 +409,8 @@ public class Loader {
                     reader.close();
                     return false;
                 }
-                buf = word.split(" ");
-                hmm.models.get(k).cThreshold = Integer.parseInt(buf[1]);
+                buf = word.split("\\s+");
+                hmm.models.get(k).cThreshold = Double.parseDouble(buf[1]);
 
                 word = reader.readLine();
                 if (!word.contains("NumRandomTrainingIterations:")) {
@@ -420,7 +420,7 @@ public class Loader {
                     reader.close();
                     return false;
                 }
-                buf = word.split(" ");
+                buf = word.split("\\s+");
                 hmm.models.get(k).numRandomTrainingIterations = Integer
                         .parseInt(buf[1]);
 
@@ -432,7 +432,7 @@ public class Loader {
                     reader.close();
                     return false;
                 }
-                buf = word.split(" ");
+                buf = word.split("\\s+");
                 hmm.models.get(k).maxNumIter = Integer.parseInt(buf[1]);
 
                 hmm.models.get(k).a.resize(hmm.models.get(k).numStates,
@@ -457,7 +457,7 @@ public class Loader {
                 for (int i = 0; i < hmm.models.get(k).numStates; i++) {
                     word = reader.readLine();
 //                    System.out.println(word);
-                    buf = word.split("\t");
+                    buf = word.split("\\s+");
                     for (int j = 0; j < hmm.models.get(k).numStates; j++) {
                         value = Double.parseDouble(buf[j]);
                         hmm.models.get(k).a.dataPtr[i][j] = value;
@@ -478,7 +478,7 @@ public class Loader {
                         hmm.models.get(k).numStates);
                 for (int i = 0; i < hmm.models.get(k).numStates; i++) {
                     word = reader.readLine();
-                    buf = word.split("\t");
+                    buf = word.split("\\s+");
                     for (int j = 0; j < hmm.models.get(k).numSymbols; j++) {
                         value = Double.parseDouble(buf[j]);
                         hmm.models.get(k).b.dataPtr[i][j] = value;
@@ -496,7 +496,7 @@ public class Loader {
 
                 // Load Pi
                 word = reader.readLine();
-                buf = word.split("\t");
+                buf = word.split("\\s+");
                 for (int i = 0; i < hmm.models.get(k).numStates; i++) {
                     value = Double.parseDouble(buf[i]);
                     hmm.models.get(k).pi[i] = value;
@@ -553,7 +553,7 @@ public class Loader {
 			reader.close();
 			return false;
 		}
-		quantizer.trained = (Integer.parseInt(word.split(" ")[1]) == 1);
+		quantizer.trained = (Integer.parseInt(word.split("\\s+")[1]) == 1);
 
 		word = reader.readLine();
 		if (!word.contains("NumClusters:")) {
@@ -562,7 +562,7 @@ public class Loader {
 			reader.close();
 			return false;
 		}
-		quantizer.numClusters = Integer.parseInt(word.split(" ")[1]);
+		quantizer.numClusters = Integer.parseInt(word.split("\\s+")[1]);
 
 		if (quantizer.trained) {
 			quantizer.clusters.resize(quantizer.numClusters, quantizer.numInputDimensions);
@@ -577,7 +577,7 @@ public class Loader {
 			String[] buf;
 			for (int k = 0; k < quantizer.numClusters; k++) {
 				word = reader.readLine();
-				buf = word.split("\t");
+				buf = word.split("\\s+");
 				for (int j = 0; j < quantizer.numInputDimensions; j++) {
 					quantizer.clusters.dataPtr[k][j] = Double.parseDouble(buf[j]);
 				}

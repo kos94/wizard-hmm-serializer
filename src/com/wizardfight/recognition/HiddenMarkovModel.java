@@ -149,4 +149,24 @@ public class HiddenMarkovModel implements Serializable {
         a.print();
         b.print();
     }
+    
+    public void printTXT() {
+        System.out.println("NumStates: " + numStates);
+        System.out.println("NumSymbols: " + numSymbols);
+        System.out.println("ModelType: " + ((modelType == HMMModelTypes.ERGODIC)? 0 : 1));
+        System.out.println("Delta: " + delta);
+        System.out.println("Threshold: " + cThreshold);
+        System.out.println("NumRandomTrainingIterations: " + numRandomTrainingIterations);
+        System.out.println("MaxNumIter: " + maxNumIter);
+        System.out.println("A: ");
+        a.print();
+        System.out.println("B: ");
+        b.print();
+        System.out.println("Pi: ");
+        for(int i=0; i<pi.length; i++) {
+            System.out.print(pi[i]);
+            if(i != pi.length - 1) System.out.print(" ");
+            else System.out.println();
+        }
+    }
 }

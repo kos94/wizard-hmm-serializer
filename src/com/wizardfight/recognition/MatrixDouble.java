@@ -164,12 +164,12 @@ public class MatrixDouble implements Serializable {
     }
     
     public void print() {
-        System.out.println("rows " + rows + ", cols " + cols + ", capacity " + capacity);
         for(int i=0; i<dataPtr.length; i++) {
             for(int j=0; j<dataPtr[0].length; j++) {
-                System.out.print(dataPtr[i][j] +  " ");
+                System.out.print(dataPtr[i][j]);
+                if(j != dataPtr[0].length - 1) System.out.print(" ");
+                else System.out.println();
             }
-            System.out.println();
         }
     }
 }

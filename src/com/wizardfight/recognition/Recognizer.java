@@ -125,13 +125,36 @@ public class Recognizer {
         System.out.println();
     }
     
-    public static void writeSerialized() {
+    public static KMeansQuantizer getQuantizerFromFile(String path) {
+        Loader loader = new Loader();
+        // Load quantizer from serialized file
+        try {
+            loader.loadQuantizerFromFile(path);
+            return loader.quantizer;
+        } catch (Exception ex) {
+            System.err.println("ERROR: Failed to write quantizer! " + ex);
+            return null;
+        }
+    }
+    
+    public static HMM getHMMFromFile(String path) {
+        Loader loader = new Loader();
+        try {
+            loader.loadHMMFromFile("HMMModel.txt");
+            return loader.hmm;
+        } catch (Exception ex) {
+            System.err.println("ERROR: Failed to write hmm! " + ex);
+            return null;
+        }
+    }
+    
+    public static void writeSerialized(String quantizerPath, String hmmPath) {
         Loader loader = new Loader();
         // Load quantizer from serialized file
         try {
             ObjectOutputStream os = new ObjectOutputStream(
                     new FileOutputStream(new File("HMMQuantizer.ser")));
-            loader.loadQuantizerFromFile("HMMQuantizer.txt");
+            loader.loadQuantizerFromFile(quantizerPath);
             os.writeObject(loader.quantizer);
             quantizer = loader.quantizer;
             os.close();
@@ -143,7 +166,7 @@ public class Recognizer {
         try {
             ObjectOutputStream os = new ObjectOutputStream(
                     new FileOutputStream(new File("HMMModel.ser")));
-            loader.loadHMMFromFile("HMMModel.txt");
+            loader.loadHMMFromFile(hmmPath);
             os.writeObject(loader.hmm);
             hmm = loader.hmm;
             os.close();
@@ -187,21 +210,12 @@ public class Recognizer {
     public static void main(String[] args) {
         KMeansQuantizer q = (KMeansQuantizer) 
                 Recognizer.readObject(new File("hmm_quantizer.ser"));
-        q.print();
-        Recognizer.writeSerialized();
-        Recognizer.quantizer.print();
+        KMeansQuantizer q3 = (KMeansQuantizer) 
+                Recognizer.readObject(new File("HMMQuantizer.ser"));
         HMM hmm = (HMM) 
                 Recognizer.readObject(new File("hmm_model.ser"));
-        hmm.print();
-        Recognizer.hmm.print();
-        
-//        Recognizer.init();
-//        File folder = new File("input");
-//        for (final File fileEntry : folder.listFiles()) {
-//            ArrayList<Vector3d> recs
-//                    = Recognizer.getRecordsFromFile(fileEntry);
-//            System.out.println(fileEntry.getName() + ": " + Recognizer.recognize(recs));
-//        }
-//        System.out.println((float) sum / folder.listFiles().length);
+         HMM hmm3 = (HMM) 
+                Recognizer.readObject(new File("HMMModel.ser"));
+        hmm3.printTXT();
     }
 }
